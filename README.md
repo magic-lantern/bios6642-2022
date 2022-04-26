@@ -9,7 +9,9 @@ Guest lecture on:
 * Git
 * Web scraping with Python
 
-## To Setup a similar Python environment to what is used in the presentations, run:
+## Setting up your environment
+
+### To Setup a similar Python environment to what is used in the presentations, run:
 
 `conda env create -f ./environment.yml`
 
@@ -21,6 +23,24 @@ pwsh -ExecutionPolicy ByPass -NoExit -Command "& 'C:\Anaconda3\shell\condabin\co
 conda init powershell
 ```
 
+### Alternative method
+
+```bash
+conda update -n base -c defaults conda
+conda create -n bios6642 python=3.9
+conda activate bios6642
+conda install jupyterlab selenium pandas lxml
+conda install jupytext -c conda-forge
+pip install requests-html
+conda config --add channels conda-forge
+conda config --add channels microsoft
+conda install playwright
+playwright install
+# now save the environment
+conda env export -n bios6642 > ./environment.yml
+```
+
+Note the above `environment.yml` file will have many OS specific package build labels. I remove those and non-explicitly installed packages to make `environment.yml` more portable
 ## Notes and useful information
 
 Web scraping tutorial
