@@ -15,6 +15,10 @@ Guest lecture on:
 
 `conda env create -f ./environment.yml`
 
+Then run:
+
+`playwright install`
+
 Command to enable `conda` in VSCode `pwsh` shell:
 
 ```powershell
