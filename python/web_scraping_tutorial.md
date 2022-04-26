@@ -382,6 +382,8 @@ Playwright can also create scripts interactively - you can then adjust or update
 ```bash
 playwright codegen wikipedia.org
 ```
+
+**Note:** The below code will not work in Jupyter on Windows OS. The code can be run directly via command line.
 <!-- #endregion -->
 
 ```python

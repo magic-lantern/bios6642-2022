@@ -354,6 +354,8 @@ except Exception:
 # ```bash
 # playwright codegen wikipedia.org
 # ```
+#
+# **Note:** The below code will not work in Jupyter on Windows OS. The code can be run directly via command line.
 
 # %%
 # Note - when running playwright inside Jupyter, special care must be taken due to existing Jupyter asynchronous code
