@@ -5,11 +5,11 @@ jupyter:
       extension: .md
       format_name: markdown
       format_version: '1.3'
-      jupytext_version: 1.11.1
+      jupytext_version: 1.13.8
   kernelspec:
-    display_name: Python [conda env:py37] *
+    display_name: Python 3 (ipykernel)
     language: python
-    name: conda-env-py37-py
+    name: python3
 ---
 
 ```python
@@ -65,6 +65,18 @@ It appears that the player info is in a separate table from their stats. Let's c
 stats_df = pd.concat([dfs[2], dfs[3]], axis=1)
 stats_df
 ```
+
+<!-- #region -->
+
+
+![Data Pipeline](https://imgs.xkcd.com/comics/data_pipeline.png)
+
+https://xkcd.com/2054/
+
+"Is the pipeline literally running from your laptop?"
+
+"Don't be silly, my laptop disconnects far too often to host a service we rely on. It's running on my phone."
+<!-- #endregion -->
 
 ```python
 # url = 'https://cubuffs.com/sports/mens-basketball/stats/2019-20'
@@ -130,6 +142,27 @@ for t in r.html.find('time'):
         print(f'UTC Time is: {t.text}')
 ```
 
+### What's going on?
+
+When you open the web page in your browser you can see the time. Turns out that the time portion of the website is made possible by a client side programming language called Javascript.
+
+Some history: (see https://en.wikipedia.org/wiki/JavaScript#History)
+
+> The first web browser with a graphical user interface, Mosaic, was released in 1993. Accessible to non-technical people, it played a prominent role in the rapid growth of the nascent World Wide Web. The lead developers of Mosaic then founded the Netscape corporation, which released a more polished browser, Netscape Navigator, in 1994. This quickly became the most-used.
+>
+> During these formative years of the Web, web pages could only be static, lacking the capability for dynamic behavior after the page was loaded in the browser. There was a desire in the burgeoning web development scene to remove this limitation, so in 1995, Netscape decided to add a scripting language to Navigator. They pursued two routes to achieve this: collaborating with Sun Microsystems to embed the Java programming language, while also hiring Brendan Eich to embed the Scheme language.
+> 
+> Netscape management soon decided that the best option was for Eich to devise a new language, with syntax similar to Java and less like Scheme or other extant scripting languages. Although the new language and its interpreter implementation were called LiveScript when first shipped as part of a Navigator beta in September 1995, the name was changed to JavaScript for the official release in December.
+
+Pandas and Requests-HTML, though great tools do not have a JavaScript parser built in. You need something more advanced to do that.
+
+
+### How to replicate this?
+
+https://www.lifewire.com/disable-javascript-in-firefox-446039
+
+https://www.lifewire.com/disable-javascript-in-google-chrome-4103631
+
 <!-- #region -->
 ## Web scraping using Selenium and a web browser
 
@@ -170,7 +203,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.firefox.options import Options as firefoxoptions
 options = firefoxoptions()
 # comment out this line to see what's happening
-options.headless = True
+# options.headless = True
 driver = webdriver.Firefox(options=options)
 driver.set_window_size(1024,768)
 driver.get(url)
@@ -214,13 +247,23 @@ driver.find_elements_by_tag_name('time')
 
 ```python
 for t in driver.find_elements_by_tag_name('time'):
-    if t.get_attribute('id') is not '':
+    if t.get_attribute('id') != '':
         print(t.text)
 ```
 
 ### A slightly more advanced example
 
-Similar to web development, using Selenium for web scraping requires knowledge of HTML, CSS, and Javascript. One important skill to have is how to select elements from the document object model. There are various ways of identifying or selecting desired elements. Here are some references to learn more:
+Similar to web development, using Selenium for web scraping requires knowledge of HTML, CSS, and Javascript. One important skill to have is how to select elements from the document object model. There are various ways of identifying or selecting desired elements.
+
+Basic Tutorial on how the web works:
+
+https://www.freecodecamp.org/news/web-development-for-beginners-basic-html-and-css/
+
+And another:
+
+https://microsoft.github.io/Web-Dev-For-Beginners/
+
+Here are some references to learn more about Cascading Style Sheets aka CSS:
 
 * [The 30 CSS Selectors You Must Memorize](https://code.tutsplus.com/tutorials/the-30-css-selectors-you-must-memorize--net-16048)
 * [CSS Selector Reference](https://www.w3schools.com/cssref/css_selectors.asp)
@@ -254,13 +297,14 @@ driver.implicitly_wait(5)
 ```python
 # implicity_wait works here
 dropdown = driver.find_element_by_class_name('a-dropdown-container')
+time.sleep(2)
 dropdown.click()
+time.sleep(2)
 ```
 
 ```python
 # sort by 'Price: Low to High'
 # implicity_wait often fails here
-# time.sleep(2)
 driver.find_element_by_id('s-result-sort-select_1').click()
 ```
 
@@ -309,6 +353,8 @@ pd.DataFrame({'product':product_desc,
               })
 ```
 
+Note that although we selected sort by price, there are a few out of order items. That is the result of advertizements/sponsored products.
+
 ### Cleaning up
 
 When finished, make sure you close the browser. Can either `driver.quit()` or `driver.close()`. `.close()` will close open tabs. If you close the last tab, it is the same as calling `.quit()`
@@ -322,6 +368,58 @@ try:
     driver.close()
 except Exception:
     print('Already closed')
+```
+
+<!-- #region -->
+## Playwright Python binding
+
+"Modern successor to Selenium"
+
+https://playwright.dev/python/docs/intro
+
+Playwright can also create scripts interactively - you can then adjust or update later.
+
+```bash
+playwright codegen wikipedia.org
+```
+<!-- #endregion -->
+
+```python
+# Note - when running playwright inside Jupyter, special care must be taken due to existing Jupyter asynchronous code
+# see https://github.com/microsoft/playwright-python/issues/178#issuecomment-680249269 for workarounds and alternatives
+import nest_asyncio
+nest_asyncio.apply()
+
+import asyncio
+from playwright.async_api import async_playwright
+```
+
+```python
+async def main():
+    async with async_playwright() as p:
+        browser = await p.chromium.launch()
+        page = await browser.new_page()
+        await page.goto("http://playwright.dev")
+        print(await page.title())
+        await browser.close()
+
+asyncio.run(main())
+```
+
+```python
+async def main():
+    async with async_playwright() as p:
+        browser = await p.chromium.launch()
+        page = await browser.new_page()
+        await page.goto('http://whatsmyuseragent.org/')
+        await page.screenshot(path='playwright-ua.png')
+        await browser.close()
+
+asyncio.run(main())   
+```
+
+```python
+Image(filename='playwright-ua.png')
 ```
 
 ```python
