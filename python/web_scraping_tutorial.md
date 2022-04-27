@@ -173,6 +173,8 @@ For documentation on Selenium, see:
 
 For a introductory tutorial, see https://www.scrapingbee.com/blog/selenium-python/
 
+To create Selenium scripts it can be helpful to use a test-recording tool such as [Selenium IDE](https://github.com/SeleniumHQ/selenium-ide). Selenium IDE allows you to use your browser as normal and save the actions code that can easily be edited or modified.
+
 Selenium requires additional webdriver software that allows you to control Chrome, Firefox, etc. via Python.
 
 On macOS, you can use `brew` (https://brew.sh/) to install the dependencies:
