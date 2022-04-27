@@ -100,6 +100,11 @@ Also note, that Pandas can create HTML - so you can use Python to create a table
 dfs[18].to_html()
 ```
 
+### Status Check
+
+https://cups.fast.ai/gitandweb
+
+
 # More web Scraping
 
 ```python
@@ -253,6 +258,11 @@ for t in driver.find_elements_by_tag_name('time'):
         print(t.text)
 ```
 
+### Status Check
+
+https://cups.fast.ai/gitandweb
+
+
 ### A slightly more advanced example
 
 Similar to web development, using Selenium for web scraping requires knowledge of HTML, CSS, and Javascript. One important skill to have is how to select elements from the document object model. There are various ways of identifying or selecting desired elements.
@@ -371,6 +381,10 @@ try:
 except Exception:
     print('Already closed')
 ```
+
+### Status Check
+
+https://cups.fast.ai/gitandweb
 
 <!-- #region -->
 ## Playwright Python binding

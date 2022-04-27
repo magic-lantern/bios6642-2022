@@ -95,6 +95,11 @@ dfs[18]
 dfs[18].to_html()
 
 # %% [markdown]
+# ### Status Check
+#
+# https://cups.fast.ai/gitandweb
+
+# %% [markdown]
 # # More web Scraping
 
 # %%
@@ -234,6 +239,11 @@ for t in driver.find_elements_by_tag_name('time'):
         print(t.text)
 
 # %% [markdown]
+# ### Status Check
+#
+# https://cups.fast.ai/gitandweb
+
+# %% [markdown]
 # ### A slightly more advanced example
 #
 # Similar to web development, using Selenium for web scraping requires knowledge of HTML, CSS, and Javascript. One important skill to have is how to select elements from the document object model. There are various ways of identifying or selecting desired elements.
@@ -343,6 +353,11 @@ try:
     driver.close()
 except Exception:
     print('Already closed')
+
+# %% [markdown]
+# ### Status Check
+#
+# https://cups.fast.ai/gitandweb
 
 # %% [markdown]
 # ## Playwright Python binding
